@@ -6,6 +6,7 @@ import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Chatbot from './components/Chatbot';
 import Footer from './components/Footer';
+import KatanaNav from './components/KatanaNav';
 
 const App: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
