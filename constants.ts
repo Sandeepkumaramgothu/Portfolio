@@ -140,9 +140,24 @@ export const EDUCATION: Education[] = [
   }
 ];
 
+export const PUBLICATIONS = [
+  {
+    title: "UAV Audio Detection and Identification Using Short-Time Fourier Transform Spectrograms with Deep Learning Models",
+    conference: "2025 International Conference on Unmanned Aircraft Systems (ICUAS)",
+    year: "2025/5/14",
+    link: "https://scholar.google.com/citations?hl=en&tzom=300&user=7lAYrSoAAAAJ",
+    description: "IEEE (Pages 1043-1048). Evaluates CNN, RNN, and CRNN models for multiclass drone detection using STFT spectrograms, demonstrating high accuracy in acoustic signature classification."
+  },
+  {
+    title: "UAV Audio Identification Using Mel Spectrograms",
+    conference: "International Conference on Computational Science and Computational Intelligence (CSCI 2024)",
+    year: "2024/12/11",
+    link: "https://scholar.google.com/citations?hl=en&tzom=300&user=7lAYrSoAAAAJ",
+    description: "Springer Nature. Explores preprocessing techniques and deep learning models (CNN, RNN, CRNN) for drone identification using Mel spectrograms."
+  }
+];
+
 export const CERTIFICATIONS = [
   "Microsoft Certified: Power BI Data Analyst Associate | ID: 8C3D63-F1C5AB | Valid: Jun 2025 -- Jul 2026",
-  "Microsoft Certified: Azure Administrator Associate | ID: 959B1A-3WBE29 | Valid: Feb 2023 -- Feb 2026",
-  "Research Publications: UAV Audio Detection and Identification Using STFT Spectrograms with Deep Learning, ICUAS 2025",
-  "Automated Taxonomy-Driven Red Teaming for Large Language Models (In Preparation, 2025)"
+  "Microsoft Certified: Azure Administrator Associate | ID: 959B1A-3WBE29 | Valid: Feb 2023 -- Feb 2026"
 ];

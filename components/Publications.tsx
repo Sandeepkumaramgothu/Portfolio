@@ -1,23 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Scroll } from 'lucide-react';
-
-const PUBLICATIONS = [
-    {
-        title: "Adversarial Robustness in Large Language Models",
-        conference: "NeurIPS 2024 (Under Review)",
-        year: "2024",
-        link: "#",
-        description: "Proposed a novel gradient-based attack vector for aligning LLMs against jailbreaks."
-    },
-    {
-        title: "Zero-Shot Safety Alignment via Constitutional AI",
-        conference: "ICML Workshop on Generative AI",
-        year: "2023",
-        link: "#",
-        description: "Implementing self-reflection mechanisms to improve safety scores without human labels."
-    }
-];
+import { PUBLICATIONS } from '../constants';
 
 const Publications: React.FC = () => {
     return (
