@@ -21,23 +21,23 @@ const data = [
 const SkillsRadar: React.FC = () => {
   return (
     <div className="h-[400px] w-full bg-slate-800/50 rounded-2xl p-4 border border-slate-700 shadow-xl backdrop-blur-sm">
-      <h3 className="text-xl font-semibold text-white mb-4 text-center">Technical Proficiency</h3>
+      <h3 className="text-xl font-bold text-white mb-4 text-center uppercase tracking-widest">Proficiency Radar</h3>
       <ResponsiveContainer width="100%" height="90%">
         <RadarChart cx="50%" cy="50%" outerRadius="70%" data={data}>
-          <PolarGrid stroke="#475569" />
-          <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 12 }} />
+          <PolarGrid stroke="#333" />
+          <PolarAngleAxis dataKey="subject" tick={{ fill: '#ef4444', fontSize: 11, fontWeight: 'bold' }} />
           <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
           <Radar
             name="Sandeep"
             dataKey="A"
-            stroke="#06b6d4"
-            strokeWidth={2}
-            fill="#06b6d4"
-            fillOpacity={0.3}
+            stroke="#D00000"
+            strokeWidth={3}
+            fill="#D00000"
+            fillOpacity={0.4}
           />
-          <Tooltip 
-            contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f1f5f9' }}
-            itemStyle={{ color: '#22d3ee' }}
+          <Tooltip
+            contentStyle={{ backgroundColor: '#000', borderColor: '#D00000', color: '#fff' }}
+            itemStyle={{ color: '#ef4444' }}
           />
         </RadarChart>
       </ResponsiveContainer>

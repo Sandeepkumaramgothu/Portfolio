@@ -6,8 +6,17 @@ export default {
     ],
     theme: {
         extend: {
+            colors: {
+                samurai: {
+                    red: '#D00000', // Deep crimson
+                    dark: '#050505', // Void black
+                    gold: '#FFD700', // Katana accent
+                    silver: '#E5E7EB', // Blade edge
+                }
+            },
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],
+                // suggest adding a more angular font if possible, but sticking to sans for now
             },
             animation: {
                 'slide-up': 'slideUp 0.3s ease-out forwards',

@@ -15,52 +15,127 @@ const Background: React.FC = () => {
         canvas.width = width;
         canvas.height = height;
 
-        const stars: { x: number; y: number; radius: number; vx: number; vy: number; alpha: number }[] = [];
-        const numStars = 150;
+        // Configuration
+        const particles: Particle[] = [];
+        const slashes: Slash[] = [];
+        const PARTICLE_COUNT = 100;
 
-        for (let i = 0; i < numStars; i++) {
-            stars.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                radius: Math.random() * 1.5,
-                vx: (Math.random() - 0.5) * 0.2,
-                vy: (Math.random() - 0.5) * 0.2,
-                alpha: Math.random()
-            });
+        class Particle {
+            x: number;
+            y: number;
+            speedX: number;
+            speedY: number;
+            size: number;
+            color: string;
+
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.speedX = (Math.random() - 0.5) * 1.5;
+                this.speedY = (Math.random() - 0.5) * 1.5;
+                this.size = Math.random() * 2;
+                // Tech red/white colors
+                this.color = Math.random() > 0.8 ? '#ffffff' : '#D00000';
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0 || this.x > width) this.speedX *= -1;
+                if (this.y < 0 || this.y > height) this.speedY *= -1;
+            }
+
+            draw() {
+                if (!ctx) return;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        class Slash {
+            x: number;
+            y: number;
+            length: number;
+            angle: number;
+            life: number;
+            width: number;
+
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.length = Math.random() * 200 + 100;
+                this.angle = Math.random() * Math.PI * 2;
+                this.life = 1.0;
+                this.width = Math.random() * 2 + 1;
+            }
+
+            update() {
+                this.life -= 0.02;
+            }
+
+            draw() {
+                if (!ctx || this.life <= 0) return;
+                ctx.save();
+                ctx.globalAlpha = this.life;
+                ctx.strokeStyle = '#D00000'; // Samurai Red
+                ctx.lineWidth = this.width;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#FF0000';
+
+                const endX = this.x + Math.cos(this.angle) * this.length;
+                const endY = this.y + Math.sin(this.angle) * this.length;
+
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(endX, endY);
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+
+        // Initialize particles
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+            particles.push(new Particle());
         }
 
         const animate = () => {
-            ctx.clearRect(0, 0, width, height);
-
-            // Draw Background
-            const gradient = ctx.createLinearGradient(0, 0, 0, height);
-            gradient.addColorStop(0, '#0f172a'); // slate-900
-            gradient.addColorStop(1, '#020617'); // slate-950
-            ctx.fillStyle = gradient;
+            if (!ctx) return;
+            // Trail effect (Void Black)
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.2)';
             ctx.fillRect(0, 0, width, height);
 
-            // Draw Stars
-            ctx.fillStyle = '#ffffff';
-            stars.forEach(star => {
-                ctx.globalAlpha = star.alpha;
-                ctx.beginPath();
-                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-                ctx.fill();
+            // Tech Grid (Subtle)
+            ctx.strokeStyle = 'rgba(208, 0, 0, 0.05)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            for (let i = 0; i < width; i += 50) {
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, height);
+            }
+            for (let i = 0; i < height; i += 50) {
+                ctx.moveTo(0, i);
+                ctx.lineTo(width, i);
+            }
+            ctx.stroke();
 
-                // Move
-                star.x += star.vx;
-                star.y += star.vy;
+            // Particles
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
 
-                // Bounce/Wrap
-                if (star.x < 0) star.x = width;
-                if (star.x > width) star.x = 0;
-                if (star.y < 0) star.y = height;
-                if (star.y > height) star.y = 0;
+            // Random Slashes (Katana effect)
+            if (Math.random() < 0.05) {
+                slashes.push(new Slash());
+            }
 
-                // Twinkle
-                star.alpha += (Math.random() - 0.5) * 0.02;
-                if (star.alpha < 0.1) star.alpha = 0.1;
-                if (star.alpha > 0.8) star.alpha = 0.8;
+            slashes.forEach((s, index) => {
+                s.update();
+                s.draw();
+                if (s.life <= 0) slashes.splice(index, 1);
             });
 
             requestAnimationFrame(animate);
