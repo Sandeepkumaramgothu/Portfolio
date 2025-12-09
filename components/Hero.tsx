@@ -1,27 +1,25 @@
 import React from 'react';
-import { Download, Github, Linkedin, Mail, MapPin } from 'lucide-react';
+import { Download, Github, Linkedin, Mail, MapPin, GraduationCap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { PERSONAL_INFO } from '../constants';
 
 const Hero: React.FC = () => {
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center pt-32 relative overflow-hidden bg-gradient-to-b from-black via-neutral-900 to-black">
+    <section id="home" className="min-h-screen flex items-center justify-center pt-32 relative overflow-hidden bg-slate-100">
 
-      {/* --- TECH TORII GATE --- */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-[60%] w-[600px] h-[500px] opacity-20 pointer-events-none select-none">
+      {/* Light Background Pattern */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] opacity-20 pointer-events-none bg-[radial-gradient(circle,rgba(14,165,233,0.1)_1px,transparent_1px)] bg-[length:20px_20px]"></div>
+
+      {/* --- BLUE TECH TORII GATE --- */}
+      <div className="absolute top-[40%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] opacity-10 pointer-events-none select-none">
         {/* Top Lintel (Kasagi) */}
-        <div className="absolute top-0 left-[-50px] w-[700px] h-12 bg-black border-2 border-samurai-red skew-x-12 shadow-[0_0_20px_#D00000]"></div>
+        <div className="absolute top-0 left-[-50px] w-[800px] h-16 bg-gradient-to-r from-tech-blue to-cyan-400 skew-x-12 shadow-2xl rounded-sm"></div>
         {/* Second Lintel (Nuki) */}
-        <div className="absolute top-24 left-0 w-[600px] h-8 bg-black border border-red-900"></div>
+        <div className="absolute top-32 left-0 w-[700px] h-10 bg-sky-200"></div>
         {/* Left Pillar */}
-        <div className="absolute top-12 left-20 w-16 h-[500px] bg-gradient-to-b from-black to-red-950 border-r border-red-900"></div>
+        <div className="absolute top-16 left-24 w-20 h-[500px] bg-slate-300 border-r-4 border-slate-400"></div>
         {/* Right Pillar */}
-        <div className="absolute top-12 right-20 w-16 h-[500px] bg-gradient-to-b from-black to-red-950 border-l border-red-900"></div>
-
-        {/* Neon Kanji/Tech Decorations */}
-        <div className="absolute top-32 left-1/2 -translate-x-1/2 text-9xl text-red-900 opacity-30 font-black writing-vertical-rl">
-          侍
-        </div>
+        <div className="absolute top-16 right-24 w-20 h-[500px] bg-slate-300 border-l-4 border-slate-400"></div>
       </div>
 
       <div className="container mx-auto px-6 relative z-10 text-center">
@@ -30,58 +28,66 @@ const Hero: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="inline-block px-6 py-2 bg-black border border-samurai-red mb-8 relative group overflow-hidden">
-            <div className="absolute inset-0 bg-samurai-red/20 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500"></div>
-            <span className="text-sm font-bold uppercase tracking-[0.3em] text-white relative z-10">
-              System Online
-            </span>
-          </div>
-
-          <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tighter text-white drop-shadow-[0_5px_5px_rgba(0,0,0,1)]">
-            {PERSONAL_INFO.name.split(' ')[0]}
-            <span className="text-samurai-red">.</span>
+          <h1 className="text-5xl md:text-7xl font-black mb-4 tracking-tight text-slate-800 uppercase drop-shadow-sm">
+            {PERSONAL_INFO.name}
           </h1>
 
-          <h2 className="text-xl md:text-2xl text-slate-400 font-mono mb-10 tracking-widest uppercase">
-            {PERSONAL_INFO.role} &nbsp;//&nbsp; <span className="text-samurai-red">AI SAFETY</span>
+          <h2 className="text-xl md:text-2xl text-slate-600 font-medium mb-12 tracking-wide">
+            {PERSONAL_INFO.role} &nbsp;-&nbsp; <span className="text-tech-blue font-bold">AI Safety & MLOps</span>
           </h2>
 
-          <p className="max-w-2xl mx-auto text-slate-400 text-lg mb-12 leading-relaxed font-light border-l-2 border-samurai-red pl-6 text-left bg-black/50 p-4">
-            Forging <span className="text-white font-bold">Secure AI</span> systems in the fires of production.
-            I specialize in <span className="text-red-400">LLM Security</span>, <span className="text-red-400">MLOps</span>, and <span className="text-red-400">Computer Vision</span>.
+          <p className="max-w-2xl mx-auto text-slate-600 text-lg mb-16 leading-relaxed font-light">
+            Specializing in building <span className="font-bold text-slate-800">robust, secure, and scalable</span> AI systems.
+            Passionate about research-driven MLOps and ensuring the safe deployment of machine learning technologies.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
+          <div className="flex flex-wrap items-center justify-center gap-6 mb-20 relative z-50">
             <a
               href={`${import.meta.env.BASE_URL}resume.pdf`}
               download="Sandeep_Kumar_Amgothu_Resume.pdf"
-              style={{ clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)' }}
-              className="px-10 py-4 bg-samurai-red hover:bg-white hover:text-black text-white font-black uppercase tracking-widest transition-all duration-300 shadow-[0_0_20px_rgba(208,0,0,0.5)] flex items-center gap-3 group"
+              className="px-8 py-3 bg-tech-blue hover:bg-cyan-500 text-white font-black uppercase tracking-widest shadow-lg hover:shadow-cyan-500/50 transition-all transform hover:-translate-y-1 flex items-center gap-2 rounded-sm"
             >
-              <Download size={24} className="group-hover:animate-bounce" />
+              <Download size={20} />
               Download Resume
             </a>
 
-            <div className="flex gap-4">
-              {[
-                { icon: Linkedin, link: `https://${PERSONAL_INFO.linkedin}` },
-                { icon: Github, link: `https://${PERSONAL_INFO.github}` },
-                { icon: Mail, link: `mailto:${PERSONAL_INFO.email}` }
-              ].map((item, idx) => (
-                <a key={idx} href={item.link} target="_blank" rel="noreferrer"
-                  style={{ clipPath: 'polygon(20% 0, 100% 0, 80% 100%, 0% 100%)' }}
-                  className="w-16 h-14 bg-neutral-900 border-2 border-neutral-800 hover:border-samurai-red hover:bg-neutral-800 text-slate-400 hover:text-samurai-red flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1">
-                  <item.icon size={24} />
-                </a>
-              ))}
-            </div>
+            {/* Tech Hexagon Buttons */}
+            {[
+              { name: 'LinkedIn', icon: Linkedin, link: `https://${PERSONAL_INFO.linkedin}`, color: 'bg-sky-700' },
+              { name: 'GitHub', icon: Github, link: `https://${PERSONAL_INFO.github}`, color: 'bg-slate-800' },
+              { name: 'Scholar', icon: GraduationCap, link: `https://scholar.google.com`, color: 'bg-blue-600' },
+              { name: 'Email', icon: Mail, link: `mailto:${PERSONAL_INFO.email}`, color: 'bg-cyan-600' }
+            ].map((btn, idx) => (
+              <a
+                key={idx}
+                href={btn.link}
+                target="_blank"
+                rel="noreferrer"
+                className={`relative group px-1 py-1 ${btn.color} hover:scale-105 transition-transform duration-300 shadow-md`}
+                style={{ clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)' }}
+              >
+                <div className="px-6 py-3 bg-opacity-100 flex items-center gap-3 w-40 justify-center">
+                  <btn.icon size={20} className="text-white" />
+                  <span className="text-white font-bold uppercase tracking-wider text-xs">{btn.name}</span>
+                </div>
+              </a>
+            ))}
           </div>
 
-          <div className="flex items-center justify-center gap-3 text-slate-500 font-mono text-xs uppercase tracking-widest">
-            <MapPin size={14} className="text-samurai-red" />
-            {PERSONAL_INFO.location}
-            <span className="text-samurai-red">|</span>
-            Lat: 34.0522° N
+          <div className="w-full max-w-4xl mx-auto relative mt-12 group">
+            {/* SCROLL CONTAINER (About Section in a Scroll) */}
+            <div className="relative bg-white p-8 shadow-xl border-y-8 border-slate-300 mx-8">
+              <div className="absolute top-0 left-[-20px] h-full w-8 bg-gradient-to-r from-slate-400 to-slate-200 rounded-l-lg shadow-lg"></div>
+              <div className="absolute top-0 right-[-20px] h-full w-8 bg-gradient-to-l from-slate-400 to-slate-200 rounded-r-lg shadow-lg"></div>
+
+              <div className="inline-block bg-slate-800 text-white px-8 py-1 mb-6 rounded-full font-bold uppercase tracking-widest text-sm shadow-lg transform -translate-y-4">
+                About Me
+              </div>
+
+              <p className="text-slate-700 leading-relaxed text-justify font-serif">
+                Professional with expertise in building secure and scalable AI systems. Passionate about research-driven MLOps and ensuring the safe deployment of machine learning technologies. Previous experience includes <span className="font-bold text-tech-blue">synthetic data generation</span>, and rigorous testing of LLM security.
+              </p>
+            </div>
           </div>
         </motion.div>
       </div>
