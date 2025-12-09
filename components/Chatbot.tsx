@@ -40,9 +40,13 @@ const Chatbot: React.FC = () => {
         fullResponse += chunk;
         setMessages(prev => {
           const newMessages = [...prev];
-          const lastMsg = newMessages[newMessages.length - 1];
-          if (lastMsg.role === 'model') {
-            lastMsg.text = fullResponse;
+          const lastMsgIndex = newMessages.length - 1;
+          // IMMUTABLE UPDATE: Create a copy of the last message object
+          if (newMessages[lastMsgIndex].role === 'model') {
+            newMessages[lastMsgIndex] = {
+              ...newMessages[lastMsgIndex],
+              text: fullResponse
+            };
           }
           return newMessages;
         });
@@ -65,7 +69,7 @@ const Chatbot: React.FC = () => {
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
       {/* Chat Window */}
       {isOpen && (
-        <div className="mb-4 w-[350px] md:w-[400px] h-[500px] bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 duration-300">
+        <div className="mb-4 w-[350px] md:w-[400px] h-[500px] bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 flex flex-col overflow-hidden animate-slide-up">
           
           {/* Header */}
           <div className="p-4 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
