@@ -4,12 +4,38 @@ import { motion } from 'framer-motion';
 
 const Contact: React.FC = () => {
     const [submitted, setSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    // User provided ID: mqardrnw
+    const FORMSPREE_ID = 'mqardrnw';
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setSubmitted(true);
-        // Simulate submission
-        setTimeout(() => setSubmitted(false), 3000);
+        setIsSubmitting(true);
+
+        const formData = new FormData(e.currentTarget);
+
+        try {
+            const response = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                setSubmitted(true);
+                setTimeout(() => setSubmitted(false), 5000); // Reset after 5s
+                e.currentTarget.reset();
+            } else {
+                alert("The messenger was intercepted! Please check your connection.");
+            }
+        } catch (error) {
+            alert("Error sending scroll. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -34,24 +60,24 @@ const Contact: React.FC = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div className="group">
                                     <label className="block text-red-900 font-bold uppercase text-xs tracking-widest mb-2">Name <span className="opacity-50">名</span></label>
-                                    <input type="text" className="w-full bg-transparent border-b-2 border-gray-300 focus:border-red-600 outline-none py-2 text-black font-serif transition-colors" placeholder="Ronin Name" required />
+                                    <input type="text" name="name" className="w-full bg-transparent border-b-2 border-gray-300 focus:border-red-600 outline-none py-2 text-black font-serif transition-colors" placeholder="Ronin Name" required disabled={isSubmitting} />
                                 </div>
                                 <div className="group">
                                     <label className="block text-red-900 font-bold uppercase text-xs tracking-widest mb-2">Email <span className="opacity-50">電子メール</span></label>
-                                    <input type="email" className="w-full bg-transparent border-b-2 border-gray-300 focus:border-red-600 outline-none py-2 text-black font-serif transition-colors" placeholder="messenger@clan.com" required />
+                                    <input type="email" name="email" className="w-full bg-transparent border-b-2 border-gray-300 focus:border-red-600 outline-none py-2 text-black font-serif transition-colors" placeholder="messenger@clan.com" required disabled={isSubmitting} />
                                 </div>
                             </div>
 
                             <div>
                                 <label className="block text-red-900 font-bold uppercase text-xs tracking-widest mb-2">Message <span className="opacity-50">伝言</span></label>
-                                <textarea rows={4} className="w-full bg-transparent border-b-2 border-gray-300 focus:border-red-600 outline-none py-2 text-black font-serif transition-colors resize-none" placeholder="Your message..." required></textarea>
+                                <textarea rows={4} name="message" className="w-full bg-transparent border-b-2 border-gray-300 focus:border-red-600 outline-none py-2 text-black font-serif transition-colors resize-none" placeholder="Your message..." required disabled={isSubmitting}></textarea>
                             </div>
 
                             <div className="text-center pt-4">
-                                <button type="submit" className="group relative inline-flex items-center justify-center px-12 py-4 overflow-hidden font-bold tracking-tighter text-white bg-red-900 rounded-sm hover:bg-red-800 transition-all duration-300 shadow-md">
+                                <button type="submit" disabled={isSubmitting} className="group relative inline-flex items-center justify-center px-12 py-4 overflow-hidden font-bold tracking-tighter text-white bg-red-900 rounded-sm hover:bg-red-800 transition-all duration-300 shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
                                     <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-red-600 rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
                                     <span className="relative flex items-center gap-2 uppercase tracking-widest">
-                                        <Send size={18} /> Seal & Send
+                                        <Send size={18} /> {isSubmitting ? 'Sealing...' : 'Seal & Send'}
                                     </span>
                                 </button>
                             </div>
