@@ -1,77 +1,73 @@
-import { GoogleGenAI, Chat, GenerateContentResponse } from "@google/genai";
-import { PERSONAL_INFO, SUMMARY, SKILLS, EXPERIENCE, PROJECTS, EDUCATION } from "../constants";
+import { PERSONAL_INFO, PROJECTS, SKILLS, EXPERIENCE } from "../constants";
 
-// Construct the system prompt from the resume data
-const systemPrompt = `
-You are an AI assistant for ${PERSONAL_INFO.name}'s professional portfolio website.
-Your role is to act as a representative for Sandeep, answering questions about his resume, skills, and experience.
+// MOCK SERVICE: "Ronin Responder"
+// Replaces the live Gemini API to ensure reliability on GitHub Pages without API keys.
 
-Here is Sandeep's Resume Data:
-
-Contact: ${PERSONAL_INFO.email}, ${PERSONAL_INFO.phone}, ${PERSONAL_INFO.location}
-Summary: ${SUMMARY}
-
-Skills:
-${JSON.stringify(SKILLS)}
-
-Experience:
-${JSON.stringify(EXPERIENCE)}
-
-Projects:
-${JSON.stringify(PROJECTS)}
-
-Education:
-${JSON.stringify(EDUCATION)}
-
-Rules:
-1. Answer strictly based on the provided data.
-2. Be professional, concise, and polite.
-3. If asked about contact info, provide the email or LinkedIn.
-4. Highlight his expertise in ML Security, Red Teaming, and MLOps when relevant.
-5. If the user asks something personal or unrelated to the resume, politely decline.
-6. Keep answers short (under 100 words) unless asked for details.
-`;
-
-let chatSession: Chat | null = null;
-
-export const initializeChat = (): Chat => {
-  if (chatSession) return chatSession;
-
-  try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    chatSession = ai.chats.create({
-      model: 'gemini-2.5-flash',
-      config: {
-        systemInstruction: systemPrompt,
-        temperature: 0.7,
-      },
-    });
-    return chatSession;
-  } catch (error) {
-    console.error("Failed to initialize Gemini chat:", error);
-    throw error;
-  }
+export const initializeChat = () => {
+  return {
+    sendMessageStream: async (input: { message: string }) => {
+      return {
+        stream: (async function* () {
+          const response = generateMockResponse(input.message);
+          // Simulate typing delay
+          const chunks = response.split(" ");
+          for (const chunk of chunks) {
+            await new Promise(resolve => setTimeout(resolve, 50));
+            yield chunk + " ";
+          }
+        })()
+      };
+    }
+  };
 };
 
 export const sendMessageStream = async (message: string): Promise<AsyncIterable<string>> => {
-  const chat = initializeChat();
-  
-  try {
-    const resultStream = await chat.sendMessageStream({ message });
-    
-    // Create a generator to yield text chunks
-    async function* textGenerator() {
-      for await (const chunk of resultStream) {
-        const c = chunk as GenerateContentResponse;
-        if (c.text) {
-          yield c.text;
-        }
+  const responseText = generateMockResponse(message);
+
+  // Generator to simulate streaming
+  async function* textGenerator() {
+    const chars = responseText.split("");
+    let buffer = "";
+    for (let i = 0; i < chars.length; i++) {
+      buffer += chars[i];
+      // Yield every few characters to simulate typing speed
+      if (i % 3 === 0 || i === chars.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, 30));
+        yield buffer;
+        buffer = "";
       }
     }
-    
-    return textGenerator();
-  } catch (error) {
-    console.error("Error sending message:", error);
-    throw error;
   }
+  return textGenerator();
+};
+
+const generateMockResponse = (input: string): string => {
+  const lower = input.toLowerCase();
+
+  if (lower.includes("hello") || lower.includes("hi") || lower.includes("hey")) {
+    return "Greetings, traveler. I am the Ronin Assistant. I can reveal information about Sandeep's [Projects], [Skills], [Experience], or [Contact] details. What do you seek?";
+  }
+
+  if (lower.includes("project")) {
+    const topProjects = PROJECTS.slice(0, 3).map(p => p.title).join(", ");
+    return `Sandeep has forged several powerful tools in the Armoury, including: ${topProjects}. Would you like to know more about a specific one?`;
+  }
+
+  if (lower.includes("skill") || lower.includes("tech") || lower.includes("stack")) {
+    return `His combat style relies on: Python, PyTorch, TensorFlow, and LLM Security. He is a master of MLOps and Adversarial Red-Teaming. Check the 'Combat Skills' section for the full scroll.`;
+  }
+
+  if (lower.includes("experience") || lower.includes("work") || lower.includes("job")) {
+    return `He has fought many battles. Most recently at ${EXPERIENCE[0]?.company} as a ${EXPERIENCE[0]?.role}. He specializes in deploying robust AI models at scale.`;
+  }
+
+  if (lower.includes("contact") || lower.includes("email") || lower.includes("reach")) {
+    return `You may send a messenger via the contact form below, or signal him directly at ${PERSONAL_INFO.email}.`;
+  }
+
+  if (lower.includes("who are you")) {
+    return "I am a digital spirit bound to this portfolio. My purpose is to guide you through Sandeep's achievements.";
+  }
+
+  return "I do not understand that command. Ask me about [Projects], [Skills], or [Contact] info.";
 };
