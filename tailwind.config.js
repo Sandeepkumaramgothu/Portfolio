@@ -7,11 +7,12 @@ export default {
     theme: {
         extend: {
             colors: {
-                samurai: {
-                    red: '#D00000', // Deep crimson
-                    dark: '#050505', // Void black
-                    gold: '#FFD700', // Katana accent
-                    silver: '#E5E7EB', // Blade edge
+                tech: {
+                    blue: '#0EA5E9',   // Primary Cyan/Blue
+                    dark: '#0F172A',   // Navy/Dark for contrasts (Blade)
+                    light: '#F1F5F9',  // Background White/Slate
+                    paper: '#F8FAFC',  // Scroll background
+                    accent: '#6366F1', // Indigo accent
                 }
             },
             fontFamily: {
