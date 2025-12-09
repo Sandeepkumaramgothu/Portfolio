@@ -1,92 +1,153 @@
 import React from 'react';
-import { Download, Github, Linkedin, Mail, MapPin, GraduationCap } from 'lucide-react';
+import { Download, Github, Linkedin, Mail, GraduationCap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { PERSONAL_INFO } from '../constants';
 
 const Hero: React.FC = () => {
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center pt-32 relative overflow-hidden bg-slate-100">
+    <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden bg-samurai-dark">
 
-      {/* Light Background Pattern */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] opacity-20 pointer-events-none bg-[radial-gradient(circle,rgba(14,165,233,0.1)_1px,transparent_1px)] bg-[length:20px_20px]"></div>
+      {/* --- PARALLAX BACKGROUND LAYERS --- */}
 
-      {/* --- BLUE TECH TORII GATE --- */}
-      <div className="absolute top-[40%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] opacity-10 pointer-events-none select-none">
-        {/* Top Lintel (Kasagi) */}
-        <div className="absolute top-0 left-[-50px] w-[800px] h-16 bg-gradient-to-r from-tech-blue to-cyan-400 skew-x-12 shadow-2xl rounded-sm"></div>
-        {/* Second Lintel (Nuki) */}
-        <div className="absolute top-32 left-0 w-[700px] h-10 bg-sky-200"></div>
-        {/* Left Pillar */}
-        <div className="absolute top-16 left-24 w-20 h-[500px] bg-slate-300 border-r-4 border-slate-400"></div>
-        {/* Right Pillar */}
-        <div className="absolute top-16 right-24 w-20 h-[500px] bg-slate-300 border-l-4 border-slate-400"></div>
+      {/* Layer 1: Tokyo Skyline Silhouette (Static/Far) */}
+      <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-repeat-x opacity-30 pointer-events-none z-0"
+        style={{ backgroundImage: 'linear-gradient(to top, #1A0000 0%, transparent 100%)' }}>
+        <div className="absolute bottom-0 w-full h-full bg-[linear-gradient(90deg,#000_2px,transparent_2px),linear-gradient(0deg,#000_2px,transparent_2px)] bg-[length:20px_20px] opacity-20"></div>
       </div>
 
-      <div className="container mx-auto px-6 relative z-10 text-center">
+      {/* Layer 2: Floating Lanterns (Mid) */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        {[...Array(5)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-8 h-12 bg-samurai-red rounded-lg shadow-[0_0_20px_#FF0000] opacity-60"
+            initial={{ x: Math.random() * 1000, y: 1000 }}
+            animate={{ y: -100, x: `+=${Math.sin(i) * 100}` }}
+            transition={{ duration: 15 + i * 2, repeat: Infinity, ease: "linear" }}
+            style={{ left: `${i * 20}%` }}
+          >
+            <div className="w-full h-full flex items-center justify-center font-serif text-black text-xs">光</div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Layer 3: Cherry Blossom Petals (Close/Interactive) */}
+      <div className="absolute inset-0 pointer-events-none z-10">
+        {[...Array(15)].map((_, i) => (
+          <motion.div
+            key={`petal-${i}`}
+            className="absolute w-3 h-3 bg-samurai-red/40 rounded-tl-xl rounded-br-xl"
+            initial={{ y: -20, x: Math.random() * window.innerWidth }}
+            animate={{
+              y: window.innerHeight + 20,
+              rotate: 360,
+              x: `+=${Math.random() * 200 - 100}`
+            }}
+            transition={{
+              duration: 8 + Math.random() * 5,
+              repeat: Infinity,
+              ease: "linear",
+              delay: Math.random() * 5
+            }}
+          />
+        ))}
+      </div>
+
+      {/* --- RED NEON CIRCUIT TORII GATE --- */}
+      <motion.div
+        className="absolute top-[40%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] pointer-events-none select-none z-10"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 2 }}
+      >
+        {/* Top Lintel (Kasagi) with Neon Glow */}
+        <div className="absolute top-0 left-[-50px] w-[900px] h-20 bg-black border-2 border-samurai-red skew-x-12 shadow-[0_0_30px_#FF0000] flex items-center justify-center overflow-hidden">
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(255,0,0,0.5),transparent)] animate-slash"></div>
+        </div>
+        {/* Second Lintel (Nuki) */}
+        <div className="absolute top-32 left-0 w-[800px] h-12 bg-black border border-samurai-blood shadow-[0_0_15px_#DC143C]"></div>
+        {/* Pillars with Circuit Traces */}
+        <div className="absolute top-16 left-24 w-24 h-[600px] bg-black border-x-2 border-samurai-red shadow-[0_0_20px_rgba(255,0,0,0.3)]">
+          <div className="w-full h-full bg-[linear-gradient(0deg,transparent_90%,#FF0000_90%)] bg-[length:100%_50px] opacity-20 animate-pulse-red"></div>
+        </div>
+        <div className="absolute top-16 right-24 w-24 h-[600px] bg-black border-x-2 border-samurai-red shadow-[0_0_20px_rgba(255,0,0,0.3)]">
+          <div className="w-full h-full bg-[linear-gradient(0deg,transparent_90%,#FF0000_90%)] bg-[length:100%_50px] opacity-20 animate-pulse-red"></div>
+        </div>
+      </motion.div>
+
+      <div className="container mx-auto px-6 relative z-20 text-center mt-20">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8 }}
         >
-          <h1 className="text-5xl md:text-7xl font-black mb-4 tracking-tight text-slate-800 uppercase drop-shadow-sm">
-            {PERSONAL_INFO.name}
+          {/* Title Area */}
+          <h1 className="text-5xl md:text-8xl font-black mb-4 tracking-tighter text-white uppercase relative inline-block group">
+            <span className="relative z-10 drop-shadow-[0_0_10px_rgba(255,0,0,0.8)]">
+              {PERSONAL_INFO.name}
+            </span>
+            <span className="absolute -inset-1 bg-samurai-red/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
           </h1>
 
-          <h2 className="text-xl md:text-2xl text-slate-600 font-medium mb-12 tracking-wide">
-            {PERSONAL_INFO.role} &nbsp;-&nbsp; <span className="text-tech-blue font-bold">AI Safety & MLOps</span>
+          <h2 className="text-xl md:text-3xl text-samurai-crimson font-serif mb-12 tracking-[0.2em] uppercase border-b border-samurai-blood inline-block pb-2">
+            Ronin Engineer // <span className="text-white">AI Safety</span>
           </h2>
 
-          <p className="max-w-2xl mx-auto text-slate-600 text-lg mb-16 leading-relaxed font-light">
-            Specializing in building <span className="font-bold text-slate-800">robust, secure, and scalable</span> AI systems.
-            Passionate about research-driven MLOps and ensuring the safe deployment of machine learning technologies.
+          <p className="max-w-2xl mx-auto text-gray-300 text-lg mb-16 leading-relaxed font-light bg-black/60 p-6 border-l-4 border-samurai-red backdrop-blur-sm">
+            Specializing in building <span className="text-samurai-red font-bold">Robust</span> & <span className="text-samurai-red font-bold text-shadow-[0_0_8px_#FF0000]">Secure</span> AI systems.
+            A warrior in the digital realm, dedicated to research-driven MLOps and safe deployment.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-6 mb-20 relative z-50">
+          <div className="flex flex-wrap items-center justify-center gap-6 mb-20">
             <a
               href={`${import.meta.env.BASE_URL}resume.pdf`}
-              download="Sandeep_Kumar_Amgothu_Resume.pdf"
-              className="px-8 py-3 bg-tech-blue hover:bg-cyan-500 text-white font-black uppercase tracking-widest shadow-lg hover:shadow-cyan-500/50 transition-all transform hover:-translate-y-1 flex items-center gap-2 rounded-sm"
+              download
+              className="px-8 py-3 bg-samurai-red hover:bg-white hover:text-samurai-red text-black font-black uppercase tracking-widest shadow-[0_0_20px_#FF0000] transition-all transform hover:-translate-y-1 flex items-center gap-2 clip-path-slant"
             >
               <Download size={20} />
-              Download Resume
+              Resume PDF
             </a>
 
-            {/* Tech Hexagon Buttons */}
             {[
-              { name: 'LinkedIn', icon: Linkedin, link: `https://${PERSONAL_INFO.linkedin}`, color: 'bg-sky-700' },
-              { name: 'GitHub', icon: Github, link: `https://${PERSONAL_INFO.github}`, color: 'bg-slate-800' },
-              { name: 'Scholar', icon: GraduationCap, link: `https://scholar.google.com/citations?hl=en&tzom=300&user=7lAYrSoAAAAJ`, color: 'bg-blue-600' },
-              { name: 'Email', icon: Mail, link: `mailto:${PERSONAL_INFO.email}`, color: 'bg-cyan-600' }
+              { icon: Linkedin, link: `https://${PERSONAL_INFO.linkedin}` },
+              { icon: Github, link: `https://${PERSONAL_INFO.github}` },
+              { icon: GraduationCap, link: `https://scholar.google.com` },
+              { icon: Mail, link: `mailto:${PERSONAL_INFO.email}` }
             ].map((btn, idx) => (
               <a
                 key={idx}
                 href={btn.link}
                 target="_blank"
                 rel="noreferrer"
-                className={`relative group px-1 py-1 ${btn.color} hover:scale-105 transition-transform duration-300 shadow-md`}
-                style={{ clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)' }}
+                className="w-14 h-14 bg-black border-2 border-samurai-red rounded-full flex items-center justify-center text-samurai-red hover:bg-samurai-red hover:text-white hover:shadow-[0_0_30px_#FF0000] transition-all duration-300 group"
               >
-                <div className="px-6 py-3 bg-opacity-100 flex items-center gap-3 w-40 justify-center">
-                  <btn.icon size={20} className="text-white" />
-                  <span className="text-white font-bold uppercase tracking-wider text-xs">{btn.name}</span>
-                </div>
+                <btn.icon size={24} className="group-hover:animate-spin" />
               </a>
             ))}
           </div>
 
-          <div className="w-full max-w-4xl mx-auto relative mt-12 group">
-            {/* SCROLL CONTAINER (About Section in a Scroll) */}
-            <div className="relative bg-white p-8 shadow-xl border-y-8 border-slate-300 mx-8">
-              <div className="absolute top-0 left-[-20px] h-full w-8 bg-gradient-to-r from-slate-400 to-slate-200 rounded-l-lg shadow-lg"></div>
-              <div className="absolute top-0 right-[-20px] h-full w-8 bg-gradient-to-l from-slate-400 to-slate-200 rounded-r-lg shadow-lg"></div>
-
-              <div className="inline-block bg-slate-800 text-white px-8 py-1 mb-6 rounded-full font-bold uppercase tracking-widest text-sm shadow-lg transform -translate-y-4">
-                About Me
+          <div className="w-full max-w-4xl mx-auto relative mt-12">
+            <div className="relative bg-[#Fdfcf0] p-8 shadow-2xl border-y-8 border-samurai-dark mx-8 text-black"
+              style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/rice-paper.png")' }}>
+              <div className="absolute top-0 left-[-20px] h-full w-8 bg-samurai-blood rounded-l-md shadow-lg flex items-center justify-center">
+                <div className="w-2 h-3/4 bg-black/20"></div>
+              </div>
+              <div className="absolute top-0 right-[-20px] h-full w-8 bg-samurai-blood rounded-r-md shadow-lg flex items-center justify-center">
+                <div className="w-2 h-3/4 bg-black/20"></div>
               </div>
 
-              <p className="text-slate-700 leading-relaxed text-justify font-serif">
-                Professional with expertise in building secure and scalable AI systems. Passionate about research-driven MLOps and ensuring the safe deployment of machine learning technologies. Previous experience includes <span className="font-bold text-tech-blue">synthetic data generation</span>, and rigorous testing of LLM security.
+              <div className="inline-block bg-samurai-red text-white px-8 py-1 mb-6 font-bold uppercase tracking-widest text-sm shadow-lg transform -translate-y-4 clip-path-slant">
+                Mission Briefing
+              </div>
+
+              <p className="text-gray-900 leading-relaxed text-justify font-serif text-lg">
+                {PERSONAL_INFO.role} with a focus on adversarial AI red-teaming and responsible AI governance.
+                Developing automated safety frameworks to protect the next generation of intelligence.
               </p>
+
+              <div className="absolute top-4 right-4 text-samurai-red opacity-20 text-6xl font-serif select-none pointer-events-none">
+                AI
+              </div>
             </div>
           </div>
         </motion.div>

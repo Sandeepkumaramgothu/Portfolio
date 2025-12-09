@@ -6,7 +6,8 @@ const navLinks = [
     { name: 'Skills', href: '#skills' },
     { name: 'Experience', href: '#experience' },
     { name: 'Projects', href: '#projects' },
-    { name: 'Contact', href: 'mailto:sandeepkumaramgothu3@gmail.com' },
+    { name: 'Pubs', href: '#publications' },
+    { name: 'Contact', href: '#contact' },
 ];
 
 const KatanaNav: React.FC = () => {

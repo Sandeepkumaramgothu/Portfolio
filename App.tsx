@@ -5,6 +5,8 @@ import Skills from './components/Skills';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Chatbot from './components/Chatbot';
+import Publications from './components/Publications';
+import Contact from './components/Contact';
 import Footer from './components/Footer';
 import KatanaNav from './components/KatanaNav';
 
@@ -19,15 +21,8 @@ const App: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Projects', href: '#projects' },
-  ];
-
   return (
-    <div className="min-h-screen text-slate-100 overflow-x-hidden selection:bg-cyan-500 selection:text-white relative">
+    <div className="min-h-screen text-slate-100 overflow-x-hidden selection:bg-samurai-red selection:text-white relative bg-samurai-dark">
       <Background />
 
       {/* Navigation */}
@@ -38,6 +33,8 @@ const App: React.FC = () => {
         <Skills />
         <Experience />
         <Projects />
+        <Publications />
+        <Contact />
       </main>
 
       <Footer />
