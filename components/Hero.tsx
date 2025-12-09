@@ -89,8 +89,8 @@ const Hero: React.FC = () => {
             <span className="absolute -inset-1 bg-samurai-red/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
           </h1>
 
-          <h2 className="text-xl md:text-3xl text-samurai-crimson font-serif mb-12 tracking-[0.2em] uppercase border-b border-samurai-blood inline-block pb-2">
-            Ronin Engineer // <span className="text-white">AI Safety</span>
+          <h2 className="text-xl md:text-3xl text-black font-serif mb-12 tracking-[0.2em] uppercase border-b-2 border-samurai-red inline-block pb-2 drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]">
+            <span className="font-black text-samurai-red">Ronin Engineer</span> // <span className="text-black font-bold">AI Safety</span>
           </h2>
 
           <p className="max-w-2xl mx-auto text-gray-300 text-lg mb-16 leading-relaxed font-light bg-black/60 p-6 border-l-4 border-samurai-red backdrop-blur-sm">
