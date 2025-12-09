@@ -112,18 +112,25 @@ const Hero: React.FC = () => {
               { icon: Linkedin, link: `https://${PERSONAL_INFO.linkedin}`, isExternal: true },
               { icon: Github, link: `https://${PERSONAL_INFO.github}`, isExternal: true },
               { icon: GraduationCap, link: `https://scholar.google.com`, isExternal: true },
-              { icon: Mail, link: `mailto:${PERSONAL_INFO.email}`, isExternal: false }
             ].map((btn, idx) => (
               <a
                 key={idx}
                 href={btn.link}
-                target={btn.isExternal ? "_blank" : undefined}
-                rel={btn.isExternal ? "noreferrer" : undefined}
+                target="_blank"
+                rel="noreferrer"
                 className="w-14 h-14 bg-black border-2 border-samurai-red rounded-full flex items-center justify-center text-samurai-red hover:bg-samurai-red hover:text-white hover:shadow-[0_0_30px_#FF0000] transition-all duration-300 group"
               >
                 <btn.icon size={24} className="group-hover:animate-spin" />
               </a>
             ))}
+
+            {/* Email Link - Separated for reliability */}
+            <a
+              href={`mailto:${PERSONAL_INFO.email}`}
+              className="w-14 h-14 bg-black border-2 border-samurai-red rounded-full flex items-center justify-center text-samurai-red hover:bg-samurai-red hover:text-white hover:shadow-[0_0_30px_#FF0000] transition-all duration-300 group"
+            >
+              <Mail size={24} className="group-hover:animate-spin" />
+            </a>
           </div>
 
           <div className="w-full max-w-4xl mx-auto relative mt-12">
