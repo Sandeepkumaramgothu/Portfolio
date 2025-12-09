@@ -8,6 +8,10 @@ This contains everything you need to run your app locally.
 
 View your app in AI Studio: https://ai.studio/apps/drive/1lbmBP-3-W7Zt_5cPz2iSmk5WnkPullcQ
 
+
+## How to Update & Publish
+See [POSTING_GUIDE.md](./POSTING_GUIDE.md) for instructions on how to add projects to your portfolio and publish them to the web.
+
 ## Run Locally
 
 **Prerequisites:**  Node.js
