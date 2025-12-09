@@ -33,21 +33,50 @@ Rules:
 `;
 
 let chatSession: Chat | null = null;
-// Use VITE_GEMINI_API_KEY as per Vite's environment variable requirement
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+
+// --- MOCK FALLBACK SYSTEM ---
+const mockResponse = async function* (message: string) {
+  const lower = message.toLowerCase();
+
+  // Simulate delay
+  await new Promise(resolve => setTimeout(resolve, 600));
+
+  let responseText = "I apologize, but I am having trouble connecting to the Neural Net. However, I can tell you that Sandeep is a Machine Learning Engineer specializing in AI Safety, MLOps, and LLMs.";
+
+  if (lower.includes("hello") || lower.includes("hi")) {
+    responseText = "Greetings. I am the Ronin Assistant. I can reveal information about Sandeep's [Projects], [Skills], or [Experience].";
+  } else if (lower.includes("project")) {
+    responseText = "Sandeep has built systems for UAV Audio Detection, LLM Red-Teaming, and Supply Chain Analytics. Check the 'Armoury' section below.";
+  } else if (lower.includes("skill")) {
+    responseText = "He is proficient in PyTorch, TensorFlow, LLM Security (Red Teaming), and MLOps pipelines. See the 'Combat Skills' section.";
+  } else if (lower.includes("experience") || lower.includes("work")) {
+    responseText = "He is currently a Graduate Researcher at TAMUCC and previously worked as a Data Engineer at TCS and Accenture.";
+  } else if (lower.includes("contact") || lower.includes("email")) {
+    responseText = `You can reach him at ${PERSONAL_INFO.email}.`;
+  }
+
+  // Stream the mock response
+  const chunks = responseText.split(" ");
+  for (const chunk of chunks) {
+    yield chunk + " ";
+    await new Promise(resolve => setTimeout(resolve, 50));
+  }
+};
 
 export const initializeChat = (): Chat => {
   if (chatSession) return chatSession;
 
   if (!API_KEY) {
-    console.error("Gemini API Key is missing! Check VITE_GEMINI_API_KEY in environment variables.");
-    throw new Error("Chat service is currently unavailable (Missing API Key).");
+    console.warn("Gemini API Key missing. Falling back to Ronin Mock Responder.");
+    // We throw specifically to trigger the persistent fallback in sendMessageStream
+    throw new Error("MISSING_KEY");
   }
 
   try {
     const ai = new GoogleGenAI({ apiKey: API_KEY });
     chatSession = ai.chats.create({
-      model: 'gemini-2.0-flash-exp', // Using a fast, modern model
+      model: 'gemini-1.5-flash', // Switched to stable 1.5-flash
       config: {
         systemInstruction: systemPrompt,
         temperature: 0.7,
@@ -65,7 +94,6 @@ export const sendMessageStream = async (message: string): Promise<AsyncIterable<
     const chat = initializeChat();
     const resultStream = await chat.sendMessageStream({ message });
 
-    // Create a generator to yield text chunks
     async function* textGenerator() {
       for await (const chunk of resultStream) {
         const c = chunk as GenerateContentResponse;
@@ -74,11 +102,11 @@ export const sendMessageStream = async (message: string): Promise<AsyncIterable<
         }
       }
     }
-
     return textGenerator();
+
   } catch (error) {
-    console.error("Error sending message:", error);
-    // Fallback message if API fails
-    throw error;
+    console.warn("API Error or Missing Key. Using Fallback.", error);
+    // Silent Fallback to Mock
+    return mockResponse(message);
   }
 };
