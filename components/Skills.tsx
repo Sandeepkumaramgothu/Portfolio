@@ -39,44 +39,20 @@ const Skills: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-
-          {/* Column 1: Machine Learning */}
-          <div className="bg-slate-50 p-6 rounded-lg border border-slate-200 shadow-sm">
-            <h3 className="text-lg font-black text-slate-800 uppercase tracking-wider mb-6 border-b-2 border-tech-blue pb-2">
-              Machine Learning
-            </h3>
-            <SkillBar name="Machine Learning" level={95} />
-            <SkillBar name="Bayesian" level={85} />
-            <SkillBar name="Neural Networks" level={92} />
-            <SkillBar name="Bootstrap" level={80} />
-            <SkillBar name="Regosting" level={88} />
-          </div>
-
-          {/* Column 2: MLOps */}
-          <div className="bg-slate-50 p-6 rounded-lg border border-slate-200 shadow-sm">
-            <h3 className="text-lg font-black text-slate-800 uppercase tracking-wider mb-6 border-b-2 border-tech-blue pb-2">
-              MLOps
-            </h3>
-            <SkillBar name="MLOps" level={90} />
-            <SkillBar name="Pipeline" level={95} />
-            <SkillBar name="Conservator" level={85} />
-            <SkillBar name="Ricon" level={80} />
-            <SkillBar name="Bontime" level={82} />
-          </div>
-
-          {/* Column 3: Languages */}
-          <div className="bg-slate-50 p-6 rounded-lg border border-slate-200 shadow-sm">
-            <h3 className="text-lg font-black text-slate-800 uppercase tracking-wider mb-6 border-b-2 border-tech-blue pb-2">
-              Languages
-            </h3>
-            <SkillBar name="Code" level={98} />
-            <SkillBar name="Python" level={95} />
-            <SkillBar name="SQL" level={90} />
-            <SkillBar name="JSON" level={95} />
-            <SkillBar name="HTML/CSS" level={85} />
-          </div>
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {SKILLS.map((category, idx) => (
+            <div key={idx} className="bg-slate-50 p-6 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider mb-6 border-b-2 border-tech-blue pb-2 truncate" title={category.category}>
+                {category.category}
+              </h3>
+              <div className="space-y-4">
+                {category.skills.map((skill, sIdx) => (
+                  /* Assigning a pseudo-random high level for visual flare since resume has no % */
+                  <SkillBar key={sIdx} name={skill} level={85 + (sIdx * 2) % 15} />
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
