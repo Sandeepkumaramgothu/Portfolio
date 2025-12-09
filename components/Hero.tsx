@@ -55,7 +55,7 @@ const Hero: React.FC = () => {
             {[
               { name: 'LinkedIn', icon: Linkedin, link: `https://${PERSONAL_INFO.linkedin}`, color: 'bg-sky-700' },
               { name: 'GitHub', icon: Github, link: `https://${PERSONAL_INFO.github}`, color: 'bg-slate-800' },
-              { name: 'Scholar', icon: GraduationCap, link: `https://scholar.google.com`, color: 'bg-blue-600' },
+              { name: 'Scholar', icon: GraduationCap, link: `https://scholar.google.com/citations?hl=en&tzom=300&user=7lAYrSoAAAAJ`, color: 'bg-blue-600' },
               { name: 'Email', icon: Mail, link: `mailto:${PERSONAL_INFO.email}`, color: 'bg-cyan-600' }
             ].map((btn, idx) => (
               <a
