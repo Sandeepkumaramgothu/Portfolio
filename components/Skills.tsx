@@ -1,65 +1,103 @@
 import React from 'react';
 import { SKILLS } from '../constants';
 import { motion } from 'framer-motion';
+import { Database, Code2, BrainCircuit, ShieldAlert, Cpu, Network, Cloud, LineChart } from 'lucide-react';
+
+const getCategoryIcon = (category: string) => {
+    switch (category) {
+        case "Machine Learning & AI": return <BrainCircuit size={20} />;
+        case "LLM & Generative AI": return <Network size={20} />;
+        case "AI Safety & Security": return <ShieldAlert size={20} />;
+        case "MLOps & Infrastructure": return <Cpu size={20} />;
+        case "Data Engineering": return <Database size={20} />;
+        case "Vector Databases & Search": return <Code2 size={20} />;
+        case "Cloud & DevOps": return <Cloud size={20} />;
+        default: return <LineChart size={20} />;
+    }
+};
 
 const Skills: React.FC = () => {
   return (
-    <section id="skills" className="py-20 bg-samurai-dark relative overflow-hidden">
-      {/* Background Tessellation Pattern */}
-      <div className="absolute inset-0 opacity-5 bg-[linear-gradient(45deg,#FF0000_1px,transparent_1px)] bg-[length:30px_30px]"></div>
+    <section id="skills" className="py-24 relative z-10 w-full lg:min-h-screen flex flex-col justify-center">
+      <div className="w-full mb-12">
+        <p className="text-amber-400 text-xs font-mono uppercase tracking-[0.3em] mb-3">CORE PROFICIENCIES</p>
+        <h2 className="text-4xl md:text-5xl font-black text-white">The Intelligence Stack.</h2>
+      </div>
 
-      <div className="container mx-auto px-6 relative z-10">
-
-        {/* Section Header */}
-        <div className="flex justify-center mb-16">
-          <div className="bg-black border-2 border-samurai-red px-12 py-3 clip-path-slant shadow-[0_0_15px_rgba(255,0,0,0.4)]">
-            <h2 className="text-2xl font-black text-white uppercase tracking-[0.3em] flex items-center gap-4">
-              <span className="text-samurai-red text-3xl">⚔️</span>
-              Combat Skills
-              <span className="text-samurai-red text-3xl">⚔️</span>
-            </h2>
-          </div>
-        </div>
-
-        {/* Compact Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto items-start">
-
-          {SKILLS.map((category, idx) => (
-            <div key={idx} className="bg-black/40 p-1 rounded-lg border-l-4 border-samurai-red relative">
-              {/* Category Title */}
-              <h3 className="text-lg font-black text-white uppercase tracking-wider mb-6 pl-4 pt-2 flex items-center gap-2">
-                {category.category}
-              </h3>
-
-              {/* Hex Grid */}
-              <div className="flex flex-wrap gap-4 pl-4 pb-4">
-                {category.skills.map((skill, sIdx) => (
-                  <motion.div
-                    key={sIdx}
-                    whileHover={{ scale: 1.1, zIndex: 10 }}
-                    className="relative w-24 h-28 flex items-center justify-center group cursor-pointer"
-                  >
-                    {/* Hexagon Shape */}
-                    <div className="absolute inset-0 bg-gray-900 border-2 border-gray-700 transition-all duration-300 group-hover:bg-samurai-red group-hover:border-samurai-crimson group-hover:shadow-[0_0_15px_#FF0000]"
-                      style={{ clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)" }}>
-                    </div>
-
-                    {/* Inner Hexagon (active fill simulation) */}
-                    <div className="absolute inset-1 bg-black/50 transition-all duration-300 group-hover:bg-transparent"
-                      style={{ clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)" }}>
-                    </div>
-
-                    {/* Text */}
-                    <span className="relative z-10 text-[10px] font-bold text-center text-gray-300 leading-tight uppercase tracking-wider px-2 break-words group-hover:text-white">
-                      {skill}
-                    </span>
-                  </motion.div>
-                ))}
-              </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        {/* Main large card */}
+        <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="lg:col-span-2 glass-card p-8 flex flex-col justify-between relative overflow-hidden"
+        >
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div className="relative z-10">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 mb-6 border border-amber-500/20">
+                    <BrainCircuit size={24} />
+                </div>
+                <h3 className="font-black text-2xl text-white mb-4">Core Architecture & AI Systems</h3>
+                <p className="text-slate-400 mb-8 max-w-lg leading-relaxed">
+                    Engineering scalable machine learning platforms and securing large language models against adversarial attacks using state-of-the-art frameworks.
+                </p>
             </div>
-          ))}
 
-        </div>
+            <div className="flex flex-wrap gap-2 relative z-10">
+                {SKILLS[0].skills.slice(0, 5).map(skill => (
+                    <span key={skill} className="px-4 py-2 rounded-full text-sm font-medium border border-amber-500/30 bg-amber-500/10 text-amber-400">
+                        {skill}
+                    </span>
+                ))}
+                {SKILLS[1].skills.slice(0, 4).map(skill => (
+                    <span key={skill} className="px-4 py-2 rounded-full text-sm font-medium border border-cyan-500/30 bg-cyan-500/10 text-cyan-400">
+                        {skill}
+                    </span>
+                ))}
+            </div>
+        </motion.div>
+
+        {/* Regular cards */}
+        {SKILLS.map((item, index) => (
+            <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="glass-card p-6"
+            >
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 mb-4">
+                    {getCategoryIcon(item.category)}
+                </div>
+                <h3 className="font-bold text-white mb-4">{item.category}</h3>
+                
+                <div className="flex flex-wrap gap-2">
+                    {item.skills.map(skill => (
+                        <span key={skill} className="px-3 py-1.5 rounded-full text-xs font-medium border border-white/10 text-slate-300 hover:border-amber-500/40 hover:text-amber-400 transition-all cursor-default">
+                            {skill}
+                        </span>
+                    ))}
+                </div>
+            </motion.div>
+        ))}
+
+        {/* CTA Card */}
+        <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="glass-card p-8 border-amber-500/40 bg-amber-500/5 flex flex-col items-center justify-center text-center"
+        >
+            <h3 className="text-xl font-bold text-white mb-2 max-w-[200px]">Let's discuss your next breakthrough in AI</h3>
+            <a href="#contact" className="mt-4 text-amber-400 font-bold uppercase tracking-widest text-sm hover:text-amber-300 transition-colors inline-flex items-center gap-2">
+                INITIATE CONTACT →
+            </a>
+        </motion.div>
+
       </div>
     </section>
   );

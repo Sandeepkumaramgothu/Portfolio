@@ -2,14 +2,20 @@ import { Project, Experience, Education, SkillCategory } from './types';
 
 export const PERSONAL_INFO = {
   name: "Sandeep Kumar Amgothu",
-  role: "Machine Learning Engineer",
+  role: "ML Engineer & AI Safety Researcher",
+  tagline: "Architecting Intelligence.",
+  description: "Engineering robust neural architectures and scalable AI systems that transform complex data into decisive human experiences.",
+  availability: "AVAILABLE FOR WORK",
+  stat: { value: "97.2%", label: "F1-SCORE", sublabel: "UAV DETECTION SYSTEM" },
   email: "sandeepkumaramgothu3@gmail.com",
   phone: "+1 (203) 997-4125",
-  location: "Corpus Christi, USA",
-  linkedin: "linkedin.com/in/sandeepkumaramgothu",
-  github: "github.com/Sandeepkumaramgothu",
-  portfolio: "sites.google.com/view/sandeepkumaramgothu/home",
-  scholar: "scholar.google.com/citations?hl=en&user=7lAYrSoAAAAJ"
+  location: "Richmond, VA — Open to Relocation | Remote | Hybrid",
+  linkedin: "https://www.linkedin.com/in/sandeepkumaramgothu/",
+  github: "https://github.com/Sandeepkumaramgothu",
+  scholar: "https://scholar.google.com/citations?hl=en&user=7lAYrSoAAAAJ",
+  portfolio: "https://sandeepkumaramgothu.github.io/Portfolio/",
+  resumeUrl: "Sandeep_Kumaramgothu_Universal_Resume.pdf",
+  coverLetterUrl: "Sandeep_Kumaramgothu_Universal_CoverLetter.pdf"
 };
 
 export const SUMMARY = `Machine Learning Engineer with 5+ years building production-grade AI systems specializing in LLM security, computer vision, and scalable ML infrastructure. Expert in adversarial AI red-teaming, responsible AI governance, and MLOps automation, with proven ability to deploy models processing 15M+ records monthly while reducing latency by 40%. Published researcher (ICUAS 2025) bridging academic innovation and enterprise-grade ML deployment. Seeking to leverage deep expertise in AI safety, model hardening, and cloud-native ML systems to drive transformative AI solutions in 2025 and beyond.`;
@@ -158,6 +164,7 @@ export const PUBLICATIONS = [
 ];
 
 export const CERTIFICATIONS = [
-  "Microsoft Certified: Power BI Data Analyst Associate | ID: 8C3D63-F1C5AB | Valid: Jun 2025 -- Jul 2026",
-  "Microsoft Certified: Azure Administrator Associate | ID: 959B1A-3WBE29 | Valid: Feb 2023 -- Feb 2026"
+  "Microsoft Certified: Power BI Data Analyst Associate | ID: 8C3D63-F1C5AB | Valid: Jun 2025 – Jul 2027",
+  "Microsoft Certified: Azure Administrator Associate | ID: A80D13DAD5259C2B | Valid: Feb 2023 – Feb 2027",
+  "Microsoft Certified: Power Platform Developer Associate | ID: 29F3695AA77BF974 | Valid: Feb 2026 – Feb 2027"
 ];

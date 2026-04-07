@@ -2,21 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    @apply font-sans bg-slate-50 text-slate-800;
-  }
+:root {
+  --font-sans: 'Inter', 'DM Sans', system-ui, sans-serif;
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  background: linear-gradient(135deg, #0D1117 0%, #0A0F1E 50%, #0D1117 100%);
+  min-height: 100vh;
+  color: #E2E8F0;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
-.no-scrollbar {
-  -ms-overflow-style: none;
-  /* IE and Edge */
-  scrollbar-width: none;
-  /* Firefox */
+/* Glassmorphism card utility */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
 }
+
+/* Amber glow utility */
+.amber-glow {
+  box-shadow: 0 0 30px rgba(245, 158, 11, 0.3);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0D1117; }
+::-webkit-scrollbar-thumb { background: #F59E0B; border-radius: 3px; }
+
+/* Selection */
+::selection { background: rgba(245,158,11,0.3); color: #fff; }
+
+/* Clip path slant (keep for backward compat) */
+.clip-path-slant { clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%); }
+
+/* Scan animation for ResumeDownload */
+@keyframes scan {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+
+/* Drift animation for Contact blobs */
+@keyframes drift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -20px) scale(1.05); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+/* Float animation for stat badge */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float { animation: float 4s ease-in-out infinite; }
+
+/* Pulse amber */
+@keyframes pulse-amber {
+  0%, 100% { box-shadow: 0 0 15px rgba(245,158,11,0.4); }
+  50% { box-shadow: 0 0 35px rgba(245,158,11,0.8); }
+}
+.animate-pulse-amber { animation: pulse-amber 2s ease-in-out infinite; }

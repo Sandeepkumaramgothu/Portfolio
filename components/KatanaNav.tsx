@@ -1,63 +1,120 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
 
 const navLinks = [
-    { name: 'About', href: '#home' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Pubs', href: '#publications' },
-    { name: 'Contact', href: '#contact' },
+  { name: 'Home', href: '#home' },
+  { name: 'Skills', href: '#skills' },
+  { name: 'Experience', href: '#experience' },
+  { name: 'Projects', href: '#projects' },
+  { name: 'Publications', href: '#publications' },
+  { name: 'Resume', href: '#resume' },
 ];
 
 const KatanaNav: React.FC = () => {
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
-        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-5xl px-4 pointer-events-none">
-            <motion.div
-                initial={{ width: 0, opacity: 0 }}
-                animate={{ width: '100%', opacity: 1 }}
-                transition={{ duration: 1.5, ease: "circOut" }}
-                className="relative flex items-center pointer-events-auto"
+        <>
+            <motion.nav 
+                initial={{ y: -100 }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.5 }}
+                className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+                    isScrolled ? 'bg-[#0D1117]/95 shadow-lg shadow-black/50 border-b border-white/5' : 'bg-[#0D1117]/80 backdrop-blur-xl border-b border-white/5'
+                }`}
             >
-                {/* --- TSUKA (Handle) --- */}
-                <div className="flex-shrink-0 w-24 h-10 bg-black border-2 border-samurai-red relative flex items-center justify-center overflow-hidden rounded-l-md shadow-[0_0_15px_#D00000]">
-                    {/* Diamond wrapping pattern (Tsuka-ito) */}
-                    <div className="absolute inset-0 opacity-50 bg-[repeating-linear-gradient(45deg,transparent,transparent_5px,#333_5px,#333_10px)]"></div>
-                    <span className="relative z-10 text-white font-black tracking-tighter">SKA</span>
-                </div>
-
-                {/* --- TSUBA (Guard) --- */}
-                <div className="flex-shrink-0 w-8 h-14 bg-gradient-to-b from-samurai-gold to-yellow-700 rounded-sm border border-yellow-900 shadow-lg relative z-20 flex items-center justify-center -ml-1">
-                    <div className="w-4 h-8 bg-black/50 border border-yellow-500/30 rounded-full"></div>
-                </div>
-
-                {/* --- BLADE (Nagasa) - Navigation Container --- */}
-                <div className="flex-grow h-12 bg-gradient-to-r from-gray-200 via-white to-gray-300 relative rounded-r-full shadow-[0_5px_15px_rgba(0,0,0,0.5)] flex items-center overflow-hidden border-t-2 border-b border-gray-400">
-                    {/* Steel texture */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-gray-400/20"></div>
-
-                    {/* Hamon (Temper line) - Wavy SVG or trick */}
-                    <div className="absolute bottom-0 left-0 w-full h-1/2 opacity-30" style={{
-                        background: 'repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(255,255,255,0.8) 25px, transparent 30px)'
-                    }}></div>
-
-                    <div className="flex justify-around w-full relative z-10 px-8">
+                <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+                    <div className="flex items-center">
+                        <a href="#home" className="text-xl font-black text-white hover:text-amber-400 transition-colors flex items-center">
+                            Sandeep.ai<span className="w-2 h-2 bg-amber-400 rounded-full ml-1"></span>
+                        </a>
+                    </div>
+                    
+                    <div className="hidden lg:flex items-center gap-6">
                         {navLinks.map((link, idx) => (
-                            <a
-                                key={idx}
-                                href={link.href}
-                                className="text-black font-bold uppercase tracking-widest text-sm hover:text-samurai-red hover:scale-110 transition-all duration-300 drop-shadow-sm"
+                            <a 
+                                key={idx} 
+                                href={link.href} 
+                                className="text-slate-400 hover:text-white text-sm font-medium transition-colors px-3 py-2"
                             >
                                 {link.name}
                             </a>
                         ))}
+                        <a 
+                            href="#contact" 
+                            className="ml-2 px-5 py-2 rounded-lg border border-amber-500/60 text-amber-400 text-sm font-bold hover:bg-amber-500/10 transition-all uppercase tracking-wider"
+                        >
+                            Contact
+                        </a>
                     </div>
 
-                    {/* Tip glow */}
-                    <div className="absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-white to-transparent"></div>
+                    <button 
+                        className="lg:hidden text-white"
+                        onClick={() => setIsOpen(true)}
+                    >
+                        <Menu size={28} />
+                    </button>
                 </div>
-            </motion.div>
-        </div>
+            </motion.nav>
+
+            {/* Mobile Drawer */}
+            <AnimatePresence>
+                {isOpen && (
+                    <>
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsOpen(false)}
+                            className="fixed inset-0 bg-black/60 z-[60] backdrop-blur-sm lg:hidden"
+                        />
+                        <motion.div
+                            initial={{ x: '100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '100%' }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                            className="fixed inset-y-0 right-0 w-64 bg-[#0D1117] border-l border-white/10 z-[70] flex flex-col p-6 lg:hidden"
+                        >
+                            <div className="flex justify-end mb-8">
+                                <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-white">
+                                    <X size={28} />
+                                </button>
+                            </div>
+                            <div className="flex flex-col gap-6">
+                                {navLinks.map((link, idx) => (
+                                    <a 
+                                        key={idx} 
+                                        href={link.href} 
+                                        onClick={() => setIsOpen(false)}
+                                        className="text-slate-300 hover:text-amber-400 text-lg font-medium transition-colors"
+                                    >
+                                        {link.name}
+                                    </a>
+                                ))}
+                                <div className="h-px w-full bg-white/10 my-2"></div>
+                                <a 
+                                    href="#contact" 
+                                    onClick={() => setIsOpen(false)}
+                                    className="px-5 py-3 text-center rounded-lg border border-amber-500/60 text-amber-400 text-sm font-bold hover:bg-amber-500/10 transition-all uppercase tracking-wider"
+                                >
+                                    Contact
+                                </a>
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
+        </>
     );
 };
 

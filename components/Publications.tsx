@@ -1,63 +1,49 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FileText, Scroll } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { PUBLICATIONS } from '../constants';
 
 const Publications: React.FC = () => {
     return (
-        <section id="publications" className="py-20 bg-black relative text-white overflow-hidden">
-            {/* Falling Maple Leaves */}
-            <div className="absolute inset-0 pointer-events-none">
-                {[...Array(10)].map((_, i) => (
-                    <div key={i} className="absolute w-4 h-4 bg-red-700/40 rounded-full animate-float" style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                        animationDelay: `${i}s`,
-                        clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)"
-                    }}></div>
-                ))}
-            </div>
-
-            <div className="container mx-auto px-6 relative z-10">
-                <h2 className="text-4xl font-black text-center mb-16 text-white uppercase tracking-[0.3em] drop-shadow-[0_0_10px_#FF0000]">
-                    Scrolls of Wisdom
+        <section id="publications" className="py-16 relative w-full mt-8">
+            <div className="container mx-auto px-4 max-w-5xl">
+                <h2 className="text-cyber-text text-2xl md:text-3xl font-bold tracking-[0.3em] uppercase mb-10 text-glow font-orbitron text-center">
+                    Research Logs
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {PUBLICATIONS.map((pub, index) => (
                         <motion.div
                             key={index}
-                            className="bg-[#Fdfcf0] text-black relative p-8 shadow-[0_10px_30px_rgba(0,0,0,0.5)] group hover:-translate-y-2 transition-transform duration-300"
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
+                            className="bg-cyber-panel/90 text-cyber-text p-6 cyber-box border border-cyber-neon/30 hover:border-cyber-neon transition-colors shadow-[0_0_15px_rgba(255,0,60,0.2)] hover:shadow-[0_0_20px_rgba(255,0,60,0.6)] flex flex-col group relative"
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
+                            transition={{ delay: index * 0.1 }}
                         >
-                            {/* Scroll Rollers */}
-                            <div className="absolute -left-4 top-0 bottom-0 w-6 bg-red-900 rounded-l-lg shadow-inner flex flex-col justify-center items-center">
-                                <div className="w-1 h-3/4 bg-black/30 rounded-full"></div>
-                            </div>
-                            <div className="absolute -right-4 top-0 bottom-0 w-6 bg-red-900 rounded-r-lg shadow-inner flex flex-col justify-center items-center">
-                                <div className="w-1 h-3/4 bg-black/30 rounded-full"></div>
-                            </div>
-
-                            {/* Wax Seal */}
-                            <div className="absolute top-4 right-4 w-12 h-12 bg-samurai-red rounded-full flex items-center justify-center text-white shadow-md transform rotate-12 group-hover:rotate-0 transition-transform">
-                                <span className="font-serif font-black text-lg">秘</span>
+                            {/* Decorative Top Line */}
+                            <div className="absolute top-0 left-4 right-4 h-[1px] bg-cyber-neon/50"></div>
+                            
+                            <div className="flex items-center gap-2 mb-3">
+                                <div className="w-2 h-2 bg-cyber-neon rounded-full cyber-glow animate-pulse"></div>
+                                <span className="text-cyber-neon font-orbitron text-xs font-bold uppercase tracking-widest">{pub.conference}</span>
                             </div>
 
-                            <div className="mb-2 flex items-center gap-2 text-red-800 font-bold uppercase tracking-widest text-xs">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Scholar_logo.svg" className="w-4 h-4" alt="Scholar" />
-                                {pub.conference}
-                            </div>
-
-                            <h3 className="text-xl font-bold font-serif mb-3 leading-tight">{pub.title}</h3>
-                            <p className="text-gray-700 font-serif text-sm leading-relaxed mb-4">
+                            <h3 className="text-lg font-bold font-rajdhani mb-3 leading-tight text-white group-hover:text-cyber-neon transition-colors">{pub.title}</h3>
+                            <p className="text-cyber-subtext font-rajdhani text-sm leading-relaxed mb-6 flex-grow border-l-2 border-cyber-dim pl-3">
                                 {pub.description}
                             </p>
 
-                            <a href={pub.link} className="inline-flex items-center gap-2 text-samurai-red font-bold uppercase text-xs hover:underline tracking-widest">
-                                <FileText size={14} /> Read Paper
+                            <a href={pub.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center self-start gap-2 text-cyber-neon font-orbitron font-bold uppercase text-xs tracking-widest border border-cyber-neon/40 px-4 py-2 hover:bg-cyber-neon hover:text-black transition-all">
+                                <FileText size={14} /> Extract Data
                             </a>
+
+                            {/* Corner dots */}
+                            <div className="absolute bottom-2 right-2 flex gap-1">
+                                <div className="w-1 h-1 bg-cyber-neon opacity-50"></div>
+                                <div className="w-1 h-1 bg-cyber-neon opacity-50"></div>
+                                <div className="w-1 h-1 bg-cyber-neon opacity-50"></div>
+                            </div>
                         </motion.div>
                     ))}
                 </div>

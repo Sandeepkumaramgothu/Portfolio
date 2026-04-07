@@ -1,162 +1,245 @@
-import React from 'react';
-import { Download, Github, Linkedin, Mail, GraduationCap } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { Download, FileText, Linkedin, Github, GraduationCap, Mail } from 'lucide-react';
 import { PERSONAL_INFO } from '../constants';
 
 const Hero: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    let animFrameId: number;
+    let renderer: any;
+    let cleanupFunc: () => void = () => {};
+
+    const initThreeJS = () => {
+      if (!canvasRef.current || !window.THREE) return;
+      const THREE = window.THREE;
+      
+      const width = canvasRef.current.clientWidth;
+      const height = canvasRef.current.clientHeight;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
+      camera.position.z = 300;
+
+      renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(width, height);
+      renderer.setClearColor(0x000000, 0);
+
+      // GEOMETRY 1 — Central Crystal
+      const centralGeo = new THREE.IcosahedronGeometry(80, 2);
+      const centralMat = new THREE.MeshPhongMaterial({
+        color: 0x0D1B3E,
+        emissive: 0x0A2540,
+        specular: 0x06B6D4,
+        shininess: 100,
+        transparent: true,
+        opacity: 0.85,
+        wireframe: false
+      });
+      const centralCrystal = new THREE.Mesh(centralGeo, centralMat);
+      scene.add(centralCrystal);
+
+      // GEOMETRY 2 — Wireframe overlay
+      const wireGeo = new THREE.IcosahedronGeometry(82, 2);
+      const wireMat = new THREE.MeshBasicMaterial({ color: 0x06B6D4, wireframe: true, transparent: true, opacity: 0.15 });
+      const wireOverlay = new THREE.Mesh(wireGeo, wireMat);
+      centralCrystal.add(wireOverlay);
+
+      // GEOMETRY 3 — Orbiting small crystals
+      const smallCrystals: any[] = [];
+      const orbitRadius = 130;
+      for(let i=0; i<5; i++) {
+        const geo = new THREE.IcosahedronGeometry(8, 0);
+        const mat = new THREE.MeshPhongMaterial({ color: 0xF59E0B, emissive: 0xD97706, shininess: 80 });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.userData = { offset: i * Math.PI * 2 / 5 };
+        scene.add(mesh);
+        smallCrystals.push(mesh);
+      }
+
+      // GEOMETRY 4 — Particle field
+      const particleCount = 200;
+      const particlesGeo = new THREE.BufferGeometry();
+      const posArray = new Float32Array(particleCount * 3);
+      for(let i=0; i<particleCount * 3; i+=3) {
+        // Random positions within sphere radius 250
+        const r = 250 * Math.cbrt(Math.random());
+        const theta = Math.random() * 2 * Math.PI;
+        const phi = Math.acos(2 * Math.random() - 1);
+        posArray[i] = r * Math.sin(phi) * Math.cos(theta);
+        posArray[i+1] = r * Math.sin(phi) * Math.sin(theta);
+        posArray[i+2] = r * Math.cos(phi);
+      }
+      particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+      const particlesMat = new THREE.PointsMaterial({ color: 0x94A3B8, size: 1.5, transparent: true, opacity: 0.6 });
+      const particleField = new THREE.Points(particlesGeo, particlesMat);
+      scene.add(particleField);
+
+      // LIGHTS
+      scene.add(new THREE.AmbientLight(0x0A1628, 1.0));
+      
+      const cyanLight = new THREE.PointLight(0x06B6D4, 2, 400);
+      cyanLight.position.set(100, 100, 100);
+      scene.add(cyanLight);
+      
+      const amberLight = new THREE.PointLight(0xF59E0B, 1.5, 300);
+      amberLight.position.set(-100, -50, 80);
+      scene.add(amberLight);
+      
+      const topLight = new THREE.PointLight(0xFFFFFF, 0.5, 200);
+      topLight.position.set(0, 200, 0);
+      scene.add(topLight);
+
+      // Mouse Parallax
+      let mouseX = 0;
+      let mouseY = 0;
+      let targetX = 0;
+      let targetY = 0;
+      const windowHalfX = window.innerWidth / 2;
+      const windowHalfY = window.innerHeight / 2;
+
+      const onMouseMove = (event: MouseEvent) => {
+        mouseX = (event.clientX - windowHalfX);
+        mouseY = (event.clientY - windowHalfY);
+      };
+      window.addEventListener('mousemove', onMouseMove);
+
+      const clock = new THREE.Clock();
+
+      const animate = () => {
+        animFrameId = requestAnimationFrame(animate);
+        const time = clock.getElapsedTime();
+
+        // Parallax lerp
+        targetX = mouseX * 0.001;
+        targetY = mouseY * 0.001;
+        scene.rotation.y += 0.05 * (targetX - scene.rotation.y);
+        scene.rotation.x += 0.05 * (targetY - scene.rotation.x);
+
+        // Core animation
+        centralCrystal.rotation.x += 0.003;
+        centralCrystal.rotation.y += 0.005;
+        particleField.rotation.y += 0.0005;
+
+        // Orbit update
+        smallCrystals.forEach(mesh => {
+            const offset = mesh.userData.offset;
+            mesh.position.x = Math.cos(time * 0.5 + offset) * orbitRadius;
+            mesh.position.y = Math.sin(time * 0.3 + offset) * 50;
+            mesh.position.z = Math.sin(time * 0.5 + offset) * orbitRadius;
+            mesh.rotation.x += 0.02;
+            mesh.rotation.y += 0.02;
+        });
+
+        renderer.render(scene, camera);
+      };
+
+      animate();
+
+      cleanupFunc = () => {
+        if (animFrameId) cancelAnimationFrame(animFrameId);
+        if (renderer) renderer.dispose();
+        window.removeEventListener('mousemove', onMouseMove);
+      };
+    };
+
+    if (!window.__THREE_LOADED__) {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+      script.onload = () => {
+        window.__THREE_LOADED__ = true;
+        initThreeJS();
+      };
+      document.head.appendChild(script);
+    } else {
+      initThreeJS();
+    }
+
+    return () => cleanupFunc();
+  }, []);
+
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden bg-samurai-dark">
-
-      {/* --- PARALLAX BACKGROUND LAYERS --- */}
-
-      {/* Layer 1: Tokyo Skyline Silhouette (Static/Far) */}
-      <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-repeat-x opacity-30 pointer-events-none z-0"
-        style={{ backgroundImage: 'linear-gradient(to top, #1A0000 0%, transparent 100%)' }}>
-        <div className="absolute bottom-0 w-full h-full bg-[linear-gradient(90deg,#000_2px,transparent_2px),linear-gradient(0deg,#000_2px,transparent_2px)] bg-[length:20px_20px] opacity-20"></div>
-      </div>
-
-      {/* Layer 2: Floating Lanterns (Mid) */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        {[...Array(5)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-8 h-12 bg-samurai-red rounded-lg shadow-[0_0_20px_#FF0000] opacity-60"
-            initial={{ x: Math.random() * 1000, y: 1000 }}
-            animate={{ y: -100, x: `+=${Math.sin(i) * 100}` }}
-            transition={{ duration: 15 + i * 2, repeat: Infinity, ease: "linear" }}
-            style={{ left: `${i * 20}%` }}
-          >
-            <div className="w-full h-full flex items-center justify-center font-serif text-black text-xs">光</div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Layer 3: Cherry Blossom Petals (Close/Interactive) */}
-      <div className="absolute inset-0 pointer-events-none z-10">
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={`petal-${i}`}
-            className="absolute w-3 h-3 bg-samurai-red/40 rounded-tl-xl rounded-br-xl"
-            initial={{ y: -20, x: Math.random() * window.innerWidth }}
-            animate={{
-              y: window.innerHeight + 20,
-              rotate: 360,
-              x: `+=${Math.random() * 200 - 100}`
-            }}
-            transition={{
-              duration: 8 + Math.random() * 5,
-              repeat: Infinity,
-              ease: "linear",
-              delay: Math.random() * 5
-            }}
-          />
-        ))}
-      </div>
-
-      {/* --- RED NEON CIRCUIT TORII GATE --- */}
-      <motion.div
-        className="absolute top-[40%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] pointer-events-none select-none z-10"
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 2 }}
-      >
-        {/* Top Lintel (Kasagi) with Neon Glow */}
-        <div className="absolute top-0 left-[-50px] w-[900px] h-20 bg-black border-2 border-samurai-red skew-x-12 shadow-[0_0_30px_#FF0000] flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(255,0,0,0.5),transparent)] animate-slash"></div>
-        </div>
-        {/* Second Lintel (Nuki) */}
-        <div className="absolute top-32 left-0 w-[800px] h-12 bg-black border border-samurai-blood shadow-[0_0_15px_#DC143C]"></div>
-        {/* Pillars with Circuit Traces */}
-        <div className="absolute top-16 left-24 w-24 h-[600px] bg-black border-x-2 border-samurai-red shadow-[0_0_20px_rgba(255,0,0,0.3)]">
-          <div className="w-full h-full bg-[linear-gradient(0deg,transparent_90%,#FF0000_90%)] bg-[length:100%_50px] opacity-20 animate-pulse-red"></div>
-        </div>
-        <div className="absolute top-16 right-24 w-24 h-[600px] bg-black border-x-2 border-samurai-red shadow-[0_0_20px_rgba(255,0,0,0.3)]">
-          <div className="w-full h-full bg-[linear-gradient(0deg,transparent_90%,#FF0000_90%)] bg-[length:100%_50px] opacity-20 animate-pulse-red"></div>
-        </div>
-      </motion.div>
-
-      <div className="container mx-auto px-6 relative z-20 text-center mt-20">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
+    <section id="home" className="min-h-screen flex items-center relative overflow-hidden pt-20">
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 70% 50%, rgba(6,182,212,0.05) 0%, transparent 60%)' }}></div>
+      
+      <div className="container mx-auto px-4 w-full flex flex-col lg:flex-row items-center justify-between z-10">
+        
+        {/* LEFT COLUMN */}
+        <motion.div 
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="lg:w-1/2 flex flex-col items-start w-full"
         >
-          {/* Title Area */}
-          <h1 className="text-5xl md:text-8xl font-black mb-4 tracking-tighter text-white uppercase relative inline-block group">
-            <span className="relative z-10 drop-shadow-[0_0_10px_rgba(255,0,0,0.8)]">
-              {PERSONAL_INFO.name}
-            </span>
-            <span className="absolute -inset-1 bg-samurai-red/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-400 text-xs font-mono uppercase tracking-widest mb-8">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            {PERSONAL_INFO.availability}
+          </div>
+
+          <div className="text-2xl text-slate-300 font-medium mb-3">Hi, I'm {PERSONAL_INFO.name}</div>
+          <h1 className="leading-tight tracking-tight mb-6">
+            <div className="text-5xl md:text-7xl font-black text-white">Architecting</div>
+            <div className="text-5xl md:text-7xl font-black text-amber-400">Intelligence.</div>
           </h1>
 
-          <h2 className="text-xl md:text-3xl text-black font-serif mb-12 tracking-[0.2em] uppercase border-b-2 border-samurai-red inline-block pb-2 drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]">
-            <span className="font-black text-samurai-red">Ronin Engineer</span> // <span className="text-black font-bold">AI Safety</span>
-          </h2>
-
-          <p className="max-w-2xl mx-auto text-gray-300 text-lg mb-16 leading-relaxed font-light bg-black/60 p-6 border-l-4 border-samurai-red backdrop-blur-sm">
-            Specializing in building <span className="text-samurai-red font-bold">Robust</span> & <span className="text-samurai-red font-bold text-shadow-[0_0_8px_#FF0000]">Secure</span> AI systems.
-            A warrior in the digital realm, dedicated to research-driven MLOps and safe deployment.
+          <p className="text-slate-400 text-lg leading-relaxed max-w-md mb-10">
+            {PERSONAL_INFO.description}
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-6 mb-20">
-            <a
-              href={`${import.meta.env.BASE_URL}resume.pdf`}
-              download
-              className="px-8 py-3 bg-samurai-red hover:bg-white hover:text-samurai-red text-black font-black uppercase tracking-widest shadow-[0_0_20px_#FF0000] transition-all transform hover:-translate-y-1 flex items-center gap-2 clip-path-slant"
+          <div className="flex gap-4 flex-wrap">
+            <a 
+                href="#projects"
+                className="px-8 py-4 bg-amber-500 text-black font-bold rounded-lg hover:bg-amber-400 transition-all shadow-[0_0_25px_rgba(245,158,11,0.4)] text-sm uppercase tracking-widest"
             >
-              <Download size={20} />
-              Resume PDF
+                View Projects
             </a>
-
-            {[
-              { icon: Linkedin, link: `https://${PERSONAL_INFO.linkedin}`, isExternal: true },
-              { icon: Github, link: `https://${PERSONAL_INFO.github}`, isExternal: true },
-              { icon: GraduationCap, link: `https://scholar.google.com`, isExternal: true },
-            ].map((btn, idx) => (
-              <a
-                key={idx}
-                href={btn.link}
-                target="_blank"
-                rel="noreferrer"
-                className="w-14 h-14 bg-black border-2 border-samurai-red rounded-full flex items-center justify-center text-samurai-red hover:bg-samurai-red hover:text-white hover:shadow-[0_0_30px_#FF0000] transition-all duration-300 group"
-              >
-                <btn.icon size={24} className="group-hover:animate-spin" />
-              </a>
-            ))}
-
-            {/* Email Link - Separated for reliability */}
-            <a
-              href={`mailto:${PERSONAL_INFO.email}`}
-              className="w-14 h-14 bg-black border-2 border-samurai-red rounded-full flex items-center justify-center text-samurai-red hover:bg-samurai-red hover:text-white hover:shadow-[0_0_30px_#FF0000] transition-all duration-300 group"
+            <a 
+                href={`${import.meta.env.BASE_URL}${PERSONAL_INFO.resumeUrl}`} download
+                className="px-8 py-4 border border-white/20 text-white font-bold rounded-lg hover:border-amber-500/60 hover:text-amber-400 transition-all text-sm uppercase tracking-widest flex items-center gap-2"
             >
-              <Mail size={24} className="group-hover:animate-spin" />
+                <Download size={16} /> Resume
+            </a>
+            <a 
+                href={`${import.meta.env.BASE_URL}${PERSONAL_INFO.coverLetterUrl}`} download
+                className="px-8 py-4 border border-white/10 text-slate-400 font-bold rounded-lg hover:border-amber-500/40 hover:text-amber-400 transition-all text-sm uppercase tracking-widest flex items-center gap-2"
+            >
+                <FileText size={16} /> Cover Letter
             </a>
           </div>
 
-          <div className="w-full max-w-4xl mx-auto relative mt-12">
-            <div className="relative bg-[#Fdfcf0] p-8 shadow-2xl border-y-8 border-samurai-dark mx-8 text-black"
-              style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/rice-paper.png")' }}>
-              <div className="absolute top-0 left-[-20px] h-full w-8 bg-samurai-blood rounded-l-md shadow-lg flex items-center justify-center">
-                <div className="w-2 h-3/4 bg-black/20"></div>
-              </div>
-              <div className="absolute top-0 right-[-20px] h-full w-8 bg-samurai-blood rounded-r-md shadow-lg flex items-center justify-center">
-                <div className="w-2 h-3/4 bg-black/20"></div>
-              </div>
+          <div className="flex gap-4 mt-8">
+            <a href={PERSONAL_INFO.linkedin} target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:border-amber-500/60 hover:text-amber-400 hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all">
+                <Linkedin size={20} />
+            </a>
+            <a href={PERSONAL_INFO.github} target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:border-amber-500/60 hover:text-amber-400 hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all">
+                <Github size={20} />
+            </a>
+            <a href={PERSONAL_INFO.scholar} target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:border-amber-500/60 hover:text-amber-400 hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all">
+                <GraduationCap size={20} />
+            </a>
+            <a href={`mailto:${PERSONAL_INFO.email}`} target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:border-amber-500/60 hover:text-amber-400 hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all">
+                <Mail size={20} />
+            </a>
+          </div>
+        </motion.div>
 
-              <div className="inline-block bg-samurai-red text-white px-8 py-1 mb-6 font-bold uppercase tracking-widest text-sm shadow-lg transform -translate-y-4 clip-path-slant">
-                Mission Briefing
-              </div>
-
-              <p className="text-gray-900 leading-relaxed text-justify font-serif text-lg">
-                {PERSONAL_INFO.role} with a focus on adversarial AI red-teaming and responsible AI governance.
-                Developing automated safety frameworks to protect the next generation of intelligence.
-              </p>
-
-              <div className="absolute top-4 right-4 text-samurai-red opacity-20 text-6xl font-serif select-none pointer-events-none">
-                AI
-              </div>
+        {/* RIGHT COLUMN */}
+        <motion.div 
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="lg:w-1/2 relative w-full h-[500px] lg:h-[600px] mt-12 lg:mt-0"
+        >
+            <canvas ref={canvasRef} className="absolute inset-0 rounded-2xl overflow-hidden w-full h-full" />
+            
+            {/* Stat Badge */}
+            <div className="absolute bottom-8 left-4 z-10 animate-float glass-card p-4 min-w-[160px] border-amber-500/20">
+                <p className="text-3xl font-black text-amber-400">{PERSONAL_INFO.stat.value}</p>
+                <p className="text-xs text-slate-400 uppercase tracking-widest mt-1">{PERSONAL_INFO.stat.label}</p>
+                <p className="text-xs text-slate-500 uppercase tracking-[0.2em]">{PERSONAL_INFO.stat.sublabel}</p>
             </div>
-          </div>
         </motion.div>
       </div>
     </section>
